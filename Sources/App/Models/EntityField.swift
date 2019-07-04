@@ -1,8 +1,11 @@
 
 import Vapor
-import FluentSQLite
+import FluentPostgreSQL
 
 final class EntityField: Codable {
+    public static var entity: String {
+        return "entity_field"
+    }
     var id: UUID?
     var entity: String!
     var name: String!
@@ -13,10 +16,10 @@ final class EntityField: Codable {
     }
 }
 
-extension EntityField: SQLiteUUIDModel {
-    typealias Database = SQLiteDatabase
+extension EntityField: PostgreSQLUUIDModel {
+    typealias Database = PostgreSQLDatabase
     typealias ID = UUID
     public static var idKey: IDKey = \EntityField.id
 }
 
-extension EntityField: Content {}
+extension EntityField: Content, Migration, Parameter {}

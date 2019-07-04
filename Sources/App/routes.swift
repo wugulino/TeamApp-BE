@@ -30,7 +30,7 @@ public func routes(_ router: Router) throws {
             .flatMap(to: Entity.self) { entity in
                 print("saved entity: \(entity)")
                 return entity.save(on: req)
-        }
+        }        
     }
     
     router.get("api","list") { req -> Future< [Entity] > in
@@ -39,12 +39,15 @@ public func routes(_ router: Router) throws {
 
     // Example of configuring a controller
     
-    /*
-    let todoController = TodoController()
-    router.get("todos", use: todoController.index)
-    router.post("todos", use: todoController.create)
-    router.delete("todos", Todo.parameter, use: todoController.delete)
-    */
+    
+    let entityController = EntityController()
+    router.get("entities", use: entityController.list)
+    router.post("entity", use: entityController.save)
+    router.post(Entity.self, at: "deleteEntity") { req, entity -> Future<HTTPStatus> in
+        return try entityController.delete(req, entity: entity)
+    }
+//    router.delete("entity", Entity.parameter, use: entityController.delete)
+//    router.delete("entities", Entity.parameter, use: entityController.delete)
 }
 
 

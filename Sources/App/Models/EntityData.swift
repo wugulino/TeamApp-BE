@@ -1,25 +1,28 @@
 
 import Vapor
-import FluentSQLite
+import FluentPostgreSQL
 
 final class EntityData: Codable {
+    public static var entity: String {
+        return "entity_data"
+    }
     var id: UUID?
-    var entity: String!
+    var storedEntity: String!
     var entityField: String!
     var value: String!
-    init(id: UUID, entity: String, entityField: String, value: String) {
+    init(id: UUID, storedEntity: String, entityField: String, value: String) {
         self.id = id
-        self.entity = entity
+        self.storedEntity = storedEntity
         self.entityField = entityField
         self.value = value
     }
 }
 
 
-extension EntityData: SQLiteUUIDModel {
-    typealias Database = SQLiteDatabase
+extension EntityData: PostgreSQLUUIDModel {
+    typealias Database = PostgreSQLDatabase
     typealias ID = UUID
     public static var idKey: IDKey = \EntityData.id
 }
 
-extension EntityData: Content {}
+extension EntityData: Content, Migration, Parameter {}

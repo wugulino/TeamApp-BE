@@ -1,10 +1,10 @@
-import FluentSQLite
+import FluentPostgreSQL
 import Vapor
 
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     // Register providers first
-    try services.register(FluentSQLiteProvider())
+    try services.register(FluentPostgreSQLProvider())
 
     // Register routes to the router
     let router = EngineRouter.default()
@@ -18,24 +18,38 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(middlewares)
 
     // Configure a SQLite database
-    let sqlite = try SQLiteDatabase(storage: .memory)
+/*    let path = DirectoryConfig.detect().workDir + "teamapp.db"
+    let sqlite = try SQLiteDatabase(storage: .file(path: path))
 
     // Register the configured SQLite database to the database config.
     var databases = DatabasesConfig()
-    databases.add(database: sqlite, as: .sqlite)
+    databases.add(database: sqlite, as: .sqlite) */
+    
+    // Configure a database
+    var databases = DatabasesConfig()
+    // 3
+    let databaseConfig = PostgreSQLDatabaseConfig(
+        hostname: "localhost",
+        username: "vapor",
+        database: "vapor",
+        password: "password")
+    let database = PostgreSQLDatabase(config: databaseConfig)
+    databases.add(database: database, as: .psql)
     services.register(databases)
 
     // Configure migrations
     var migrations = MigrationConfig()
-    migrations.add(model: Entity.self, database: .sqlite)
+    migrations.add(model: Entity.self, database: .psql)
+    migrations.add(model: EntityField.self, database: .psql)
+    migrations.add(model: EntityData.self, database: .psql)
     
     
-    // Example of configuring a controller
+//    // configuring controllers
 //    let entityController = EntityController()
-    /* router.get("entities", use: EntityController.index)
-    router.post("entities", use: EntityController.create)
-    router.delete("entities", EntityController.parameter,
-                  use: EntityController.delete) */
+//    router.get("entities", use: EntityController.list)
+//    router.post("entities", use: EntityController.save)
+//    router.delete("entities", EntityController.parameter,
+//                  use: EntityController.delete)
     
     
     services.register(migrations)
