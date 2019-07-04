@@ -20,17 +20,31 @@ public func routes(_ router: Router) throws {
         return "Hello \(data.username), your password is \(data.password)!"
     }
     
-    // 1
     router.post(LoginData.self, at: "login2") { req, data -> LoginResponse in
-        // 2
         return LoginResponse(request: data)
+    }
+    
+    // Link to save entities
+    router.post("api", "entities") { req -> Future<Entity> in
+        return try req.content.decode(Entity.self)
+            .flatMap(to: Entity.self) { entity in
+                print("saved entity: \(entity)")
+                return entity.save(on: req)
+        }
+    }
+    
+    router.get("api","list") { req -> Future< [Entity] > in
+        return  Entity.query(on: req).all()
     }
 
     // Example of configuring a controller
+    
+    /*
     let todoController = TodoController()
     router.get("todos", use: todoController.index)
     router.post("todos", use: todoController.create)
     router.delete("todos", Todo.parameter, use: todoController.delete)
+    */
 }
 
 
