@@ -43,11 +43,7 @@ public func routes(_ router: Router) throws {
     let entityController = EntityController()
     router.get("entities", use: entityController.list)
     router.post("entity", use: entityController.save)
-    router.post(Entity.self, at: "deleteEntity") { req, entity -> Future<HTTPStatus> in
-        return try entityController.delete(req, entity: entity)
-    }
-//    router.delete("entity", Entity.parameter, use: entityController.delete)
-//    router.delete("entities", Entity.parameter, use: entityController.delete)
+    router.delete("entity", Entity.parameter, use: entityController.delete)
 }
 
 
