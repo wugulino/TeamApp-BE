@@ -41,7 +41,7 @@ public func routes(_ router: Router) throws {
     
     
     let entityController = EntityController()
-    router.get("entities", use: entityController.list)
+    router.get("entity", use: entityController.list)
     router.post("entity", use: entityController.save)
     router.delete("entity", Entity.parameter, use: entityController.delete)
 }
@@ -55,3 +55,13 @@ struct LoginData: Content {
 struct LoginResponse: Content {
     let request: LoginData
 }
+
+/*
+ 
+ GET https://localhost:8080/api/acronyms/: get all the acronyms.
+ POST https://localhost:8080/api/acronyms: create a new acronym.
+ GET https://localhost:8080/api/acronyms/1: get the acronym with ID 1.
+ PUT https://localhost:8080/api/acronyms/1: update the acronym with ID 1.
+ DELETE https://localhost:8080/api/acronyms/1: delete the acronym with ID 1.
+ 
+ */
