@@ -16,9 +16,17 @@ import Vapor
         }
      }
     
-    func deleteEntity(_ req: Request) throws -> Future<HTTPStatus>  {
-		return try req.parameters.next(Entity.self).flatMap {e in return e.delete(on: req)}.transform(to: .ok)
+    func deleteEntity(entity: Entity, req: Request) -> EventLoopFuture<Void>  {
+        print("going to delete \(entity) ...")
+        return entity.delete(on: req)
     }
     
      /// Deletes a parameterized Entity.
-}
+
+    
+    func delete(_ req: Request) throws -> Future<HTTPStatus> {
+        return try req.parameters.next(Entity.self).flatMap { entity in
+            return entity.delete(on: req)
+        }.transform(to: .ok)
+    }
+ }
