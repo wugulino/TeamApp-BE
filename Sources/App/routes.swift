@@ -7,14 +7,7 @@ public func routes(_ router: Router) throws {
         return "It works!"
     }
     
-    // Basic "Hello, world!" example
-    router.get("hello") { req in
-        return "Hello, world!"
-    }
-    
-    router.get("hello", "vapor") { req -> String in
-        return "Hello Vapor!"
-    }
+	
     
     router.post(LoginData.self, at: "login") { req, data -> String in
         return "Hello \(data.username), your password is \(data.password)!"
@@ -43,7 +36,23 @@ public func routes(_ router: Router) throws {
     let entityController = EntityController()
     router.get("entity", use: entityController.list)
     router.post("entity", use: entityController.save)
-    router.delete("entity", Entity.parameter, use: entityController.delete)
+	router.post(Entity.self, at: ["entity","delete"]){
+		req, entity -> Future<String> in
+		print("entrei no deleteEntity")
+		let entityID = entity.id
+		return Entity.find(entityID!, on: req).flatMap {
+			maybeEntity in
+			
+			guard let entity = maybeEntity else {
+				throw Abort(.notFound)
+			}
+			
+			return entity.delete(on: req).map {
+				print("deleted entity: \(entity.id!)")
+				return "OK"
+			}
+		}
+	}
 }
 
 
