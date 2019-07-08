@@ -31,7 +31,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     let databaseConfig = PostgreSQLDatabaseConfig(
         hostname: "localhost",
         username: "vapor",
-        database: "vapor",
+        database: "teamapp-be",
         password: "password")
     let database = PostgreSQLDatabase(config: databaseConfig)
     databases.add(database: database, as: .psql)
@@ -40,17 +40,18 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     // Configure migrations
     var migrations = MigrationConfig()
     migrations.add(model: Entity.self, database: .psql)
-    migrations.add(model: EntityField.self, database: .psql)
-    migrations.add(model: EntityData.self, database: .psql)
-    
-    
-//    // configuring controllers
-//    let entityController = EntityController()
-//    router.get("entities", use: EntityController.list)
-//    router.post("entities", use: EntityController.save)
-//    router.delete("entities", EntityController.parameter,
-//                  use: EntityController.delete)
-    
-    
+    migrations.add(model: Person.self, database: .psql)
+    migrations.add(model: Campaign.self, database: .psql)
+    migrations.add(model: Pool.self, database: .psql)
+    migrations.add(model: SkillSet.self, database: .psql)
+    migrations.add(model: Skill.self, database: .psql)
+    migrations.add(model: Group.self, database: .psql)
+    migrations.add(model: GroupMember.self, database: .psql)
+    migrations.add(model: Endorsement.self, database: .psql)
+
     services.register(migrations)
+    
+    var commands = CommandConfig.default()
+    commands.useFluentCommands()
+    services.register(commands)
 }
