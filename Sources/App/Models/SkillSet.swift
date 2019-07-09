@@ -7,10 +7,10 @@ final class SkillSet: Codable {
     }
     var id          : UUID?
     var title       : String!
-    var creator     : UUID!
-    var skills      : [UUID]?
-    var pool        : UUID?
-    init(id: UUID, title: String, creator: UUID, skills: [UUID], pool: UUID) {
+    var creator     : Person.ID!
+    var skills      : [Skill.ID]?
+    var pool        : Pool.ID?
+    init(id: UUID, title: String, creator: Person.ID, skills: [Skill.ID], pool: Pool.ID) {
         self.id          = id
         self.title       = title
         self.creator     = creator

@@ -15,12 +15,12 @@ final class Person: Codable {
     var email           : String!
     var dateOfBirth     : Date
     var shortBio        : String?
-    var pools           : [UUID]?
-    var skills          : [UUID]?
+    var pools           : [Pool.ID]?
+    var skills          : [Skill.ID]?
     var passwordHash    : String?
     var deleted         : Bool
     
-    init(id: UUID, name: String, nickname: String, sex: String, title: String, foto: String, telegramID: String, email: String, dateOfBirth: Date, shortBio: String, pools: [UUID], skills: [UUID], passwordHash: String, deleted: Bool) {
+    init(id: UUID, name: String, nickname: String, sex: String, title: String, foto: String, telegramID: String, email: String, dateOfBirth: Date, shortBio: String, pools: [Pool.ID], skills: [Skill.ID], passwordHash: String, deleted: Bool) {
         self.id           = id
         self.name         = name
         self.nickname     = nickname

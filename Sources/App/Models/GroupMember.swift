@@ -6,11 +6,11 @@ final class GroupMember: Codable {
         return "group_member"
     }
     var id          : UUID?
-    var group       : UUID!
+    var group       : Group.ID!
     var role        : String
-    var person      : UUID!
+    var person      : Person.ID!
     
-    init(id: UUID, group: UUID, role: String, person: UUID) {
+    init(id: UUID, group: Group.ID, role: String, person: Person.ID) {
         self.id     = id
         self.group  = group
         self.role   = role

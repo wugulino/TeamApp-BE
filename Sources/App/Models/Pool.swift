@@ -9,9 +9,9 @@ final class Pool: Codable {
     var id: UUID?
     var title: String!
     var description: String!
-    var creator: UUID!
-    var admins: [UUID]?
-    init(id: UUID, name: String, description: String, creator: UUID, admins: [UUID]) {
+    var creator: Person.ID!
+    var admins: [Person.ID]?
+    init(id: UUID, name: String, description: String, creator: Person.ID, admins: [Person.ID]) {
         self.id          = id
         self.title       = name
         self.description = description

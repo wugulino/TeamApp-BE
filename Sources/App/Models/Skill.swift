@@ -7,9 +7,9 @@ final class Skill: Codable {
     }
     var id          : UUID?
     var title       : String!
-    var skillset    : UUID!
+    var skillset    : SkillSet.ID!
     var aggregate   : Bool
-    init(id: UUID, title: String, skillset: UUID, aggregate: Bool) {
+    init(id: UUID, title: String, skillset: SkillSet.ID, aggregate: Bool) {
         self.id          = id
         self.title       = title
         self.skillset    = skillset

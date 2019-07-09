@@ -8,9 +8,9 @@ final class Campaign: Codable {
     var id: UUID?
     var title: String!
     var description: String!
-    var groups: [UUID]?
-    var admins: [UUID]?
-    init(id: UUID, name: String, description: String, groups: [UUID], admins: [UUID]) {
+    var groups: [Group.ID]?
+    var admins: [Person.ID]?
+    init(id: UUID, name: String, description: String, groups: [Group.ID], admins: [Person.ID]) {
         self.id          = id
         self.title       = name
         self.description = description

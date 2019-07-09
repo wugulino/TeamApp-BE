@@ -7,9 +7,9 @@ final class Group: Codable {
     }
     var id          : UUID?
     var name        : String!
-    var campaign    : UUID!
+    var campaign    : Campaign.ID!
     
-    init(id: UUID, name: String, campaign: UUID) {
+    init(id: UUID, name: String, campaign: Campaign.ID) {
         self.id          = id
         self.name        = name
         self.campaign    = campaign

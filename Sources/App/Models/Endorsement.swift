@@ -6,13 +6,13 @@ final class Endorsement: Codable {
         return "endorsement"
     }
     var id          : UUID?
-    var fromPerson  : UUID?
-    var toPerson    : UUID!
-    var campaign    : UUID!
+    var fromPerson  : Person.ID?
+    var toPerson    : Person.ID!
+    var campaign    : Campaign.ID!
     var description : String?
     var value       : Int!
     
-    init(id: UUID, fromPerson: UUID?, toPerson: UUID, campaign: UUID, description: String, value: Int) {
+    init(id: UUID, fromPerson: Person.ID?, toPerson: Person.ID, campaign: Campaign.ID, description: String, value: Int) {
         self.id          = id
         self.fromPerson  = fromPerson
         self.toPerson    = toPerson
