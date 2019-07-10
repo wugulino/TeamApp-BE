@@ -1,4 +1,5 @@
 import Vapor
+import Foundation
 
 
 /// Controls basic CRUD operations on `Entity`s.
@@ -10,6 +11,8 @@ protocol ControllerProtocol {
     func insert(_ req: Request) throws -> Future<YourEntity>;
     func update(_ req: Request) throws -> Future<YourEntity>;
     func delete(_ req: Request) throws -> Future<HTTPStatus>;
+    
+    func search<Type>(_ req: Request, keypath: KeyPath<YourEntity,Type>)
 }
 
 /*
