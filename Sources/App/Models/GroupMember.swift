@@ -35,4 +35,14 @@ extension GroupMember: Migration {
     }
 }
 
-
+extension PartialKeyPath where Root == GroupMember {
+    var stringValue: String {
+        switch self {
+        case \GroupMember.id    : return "id"
+        case \GroupMember.group : return "group"
+        case \GroupMember.role  : return "role"
+        case \GroupMember.person: return "person"
+        default: fatalError("Unexpected key path")
+        }
+    }
+}

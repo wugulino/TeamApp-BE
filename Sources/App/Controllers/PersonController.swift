@@ -1,37 +1,56 @@
-/*
-
 import Vapor
-
 
 /// Controls basic CRUD operations on `Entity`s.
 final class PersonController: ControllerProtocol {
-	func find(_ req: Request) throws -> Future<Person> {
-		// return Future<Person>
-		return nil
-	}
-	
-	func update(_ req: Request) throws -> Future<Person> {
-		// return Future<Person>
-		return nil
-	}
-	
-    /// Returns a list of all entities.
+    func find(_ id: UUID, on req: Request) throws -> EventLoopFuture<Person?> {
+        return Person.find(id, on: req)
+    }
+    
     func list(_ req: Request) throws -> Future<[Person]> {
         return Person.query(on: req).all()
     }
     
-    /// Saves a decoded `Entity` to the database.
-    func insert(_ req: Request) throws -> Future<Person> {
-        return try req.content.decode(Person.self).flatMap { person in
-            return person.save(on: req)
-        }
+    func insert(_ newItem: Person, on req: Request) throws -> EventLoopFuture<Person> {
+        return newItem.save(on: req)
     }
     
-    func delete(_ req: Request) throws -> Future<HTTPStatus> {
-        return try req.parameters.next(Person.self).flatMap { person in
-            return person.delete(on: req)
-        }.transform(to: .ok)
+    func update(_ newValue: Person, on req: Request) throws -> EventLoopFuture<Person> {
+        return newValue.update(on: req)
     }
+    
+    func delete(this: Person, on req: Request) throws -> EventLoopFuture<HTTPStatus> {
+        let personID = this.id
+        return Person.find(personID!, on: req).flatMap {
+            maybePerson in
+            guard let this = maybePerson else {
+                throw Abort(.notFound)
+            }
+            return this.delete(on: req).map {
+                print("deleted entity: \(this.id!)")
+                return HTTPStatus.ok
+            }
+        }
+    }
+
+    func searchAND(_ req: Request, theseValues: Person, onFields: [PartialKeyPath<Person>]) throws -> EventLoopFuture<[Person]> {
+        var rawSQLQuery: String = " SELECT * person WHERE deleted = false AND "
+        for i in 0 ..< onFields.count {
+            let value = theseValues[keyPath: onFields[i]] as! String
+            rawSQLQuery += " AND " + onFields[i].stringValue + " = " + value + "  "
+        }
+        print(rawSQLQuery)
+    }
+    
+    func searchOR(_ req: Request, theseValues: Person, onFields: [PartialKeyPath<Person>])  throws -> EventLoopFuture<[Person]>{
+        var rawSQLQuery: String = " SELECT * person WHERE deleted = false AND ("
+        for i in 0 ..< onFields.count {
+            let value = theseValues[keyPath: onFields[i]] as! String
+            let disjunction: String = (i > 0) ? " OR " : ""
+            rawSQLQuery += disjunction + onFields[i].stringValue + " = " + value + "  "
+        }
+        rawSQLQuery += ")"
+        print(rawSQLQuery)
+    }
+    
 }
 
-*/

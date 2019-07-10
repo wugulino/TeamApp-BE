@@ -33,3 +33,13 @@ extension Group: Migration {
     }
 }
 
+extension PartialKeyPath where Root == Group {
+    var stringValue: String {
+        switch self {
+        case \Group.id       : return "id"
+        case \Group.name     : return "group"
+        case \Group.campaign : return "role"
+        default: fatalError("Unexpected key path")
+        }
+    }
+}

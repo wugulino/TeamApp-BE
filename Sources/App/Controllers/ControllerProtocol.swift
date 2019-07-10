@@ -6,18 +6,12 @@ import Foundation
 protocol ControllerProtocol {
     associatedtype YourEntity
     /// Returns a list of all entities.
-    func find(_ req: Request) throws -> Future<YourEntity>;
+    func find(_ id: UUID, on req: Request) throws -> Future<YourEntity?>;
     func list(_ req: Request) throws -> Future<[YourEntity]>;
-    func insert(_ req: Request) throws -> Future<YourEntity>;
-    func update(_ req: Request) throws -> Future<YourEntity>;
-    func delete(_ req: Request) throws -> Future<HTTPStatus>;
+    func insert(_ newItem: YourEntity, on req: Request) throws -> Future<YourEntity>;
+    func update(_ newValue: YourEntity, on req: Request) throws -> Future<YourEntity>;
+    func delete(this: YourEntity, on req: Request) throws -> Future<HTTPStatus>;
     
-    func search<Type>(_ req: Request, keypath: KeyPath<YourEntity,Type>)
+    func searchAND(_ req: Request, theseValues: YourEntity, onFields: [PartialKeyPath<YourEntity>]) throws -> Future<[YourEntity]>;
+    func searchOR(_ req: Request, theseValues: YourEntity, onFields: [PartialKeyPath<YourEntity>]) throws -> Future<[YourEntity]>;
 }
-
-/*
- func search<T>(_ keyPath: KeyPath<Element, T>) -> [T] {
-    return map { $0[keyPath: keyPath] }
- }
- 
- */

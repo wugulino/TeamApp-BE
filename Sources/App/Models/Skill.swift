@@ -33,3 +33,15 @@ extension Skill: Migration {
         }
     }
 }
+
+extension PartialKeyPath where Root == Skill {
+    var stringValue: String {
+        switch self {
+        case \Skill.id          : return "id"
+        case \Skill.title        : return "title"
+        case \Skill.skillset     : return "skillset"
+        case \Skill.aggregate    : return "aggregate"
+        default: fatalError("Unexpected key path")
+        }
+    }
+}

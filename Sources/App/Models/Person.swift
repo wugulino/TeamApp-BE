@@ -56,3 +56,25 @@ extension Person: Migration {
         }
     }
 }
+
+extension PartialKeyPath where Root == Person {
+    var stringValue: String {
+        switch self {
+            case \Person.id           : return "id"
+            case \Person.name         : return "name"
+            case \Person.nickname     : return "nickname"
+            case \Person.sex          : return "sex"
+            case \Person.title        : return "title"
+            case \Person.foto         : return "foto"
+            case \Person.telegramID   : return "telegramID"
+            case \Person.email        : return "email"
+            case \Person.dateOfBirth  : return "dateOfBirth"
+            case \Person.shortBio     : return "shortBio"
+            case \Person.pools        : return "pools"
+            case \Person.skills       : return "skills"
+            case \Person.passwordHash : return "passwordHash"
+            case \Person.deleted      : return "deleted"
+            default: fatalError("Unexpected key path")
+        }
+    }
+}

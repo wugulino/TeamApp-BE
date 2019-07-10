@@ -37,3 +37,16 @@ extension Pool: Migration {
     }
 }
 
+
+extension PartialKeyPath where Root == Pool {
+    var stringValue: String {
+        switch self {
+        case \Pool.id           : return "id"
+        case \Pool.title        : return "title"
+        case \Pool.description  : return "description"
+        case \Pool.creator      : return "creator"
+        case \Pool.admins       : return "admins"
+        default: fatalError("Unexpected key path")
+        }
+    }
+}

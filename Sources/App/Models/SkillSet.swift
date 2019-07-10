@@ -36,4 +36,15 @@ extension SkillSet: Migration {
     }
 }
 
-
+extension PartialKeyPath where Root == SkillSet {
+    var stringValue: String {
+        switch self {
+        case \SkillSet.id          : return "id"
+        case \SkillSet.title       : return "title"
+        case \SkillSet.creator     : return "creator"
+        case \SkillSet.skills      : return "skills"
+        case \SkillSet.pool        : return "pool"
+        default: fatalError("Unexpected key path")
+        }
+    }
+}
