@@ -20,25 +20,22 @@ public func routes(_ router: Router) throws {
     
     
     let entityController = EntityController()
+	// get all
     router.get("entities", use: entityController.list)
+	
+	// insert
     router.post("entity", use: entityController.save)
-    
+	
+	// update
+	router.post(Entity.self, at: ["entity","update"]) {
+		req, entity -> Future<Entity> in
+		return try entityController.update(req, entity: entity)
+	}
+	
+	// delete
     router.post(Entity.self, at: ["entity","delete"]){
         req, entity -> Future<String> in
-        print("entrei no deleteEntity")
-        let entityID = entity.id
-        return Entity.find(entityID!, on: req).flatMap {
-            maybeEntity in
-            
-            guard let entity = maybeEntity else {
-                throw Abort(.notFound)
-            }
-            
-            return entity.delete(on: req).map {
-                print("deleted entity: \(entity.id!)")
-                return "OK"
-            }
-        }
+		return try entityController.deleteEntity(req, entity: entity)
     }
     
 }

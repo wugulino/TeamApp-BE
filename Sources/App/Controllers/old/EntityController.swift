@@ -16,13 +16,22 @@ import Vapor
         }
      }
     
-    func deleteEntity(entity: Entity, req: Request) -> EventLoopFuture<Void>  {
-        print("going to delete \(entity) ...")
-        return entity.delete(on: req)
-    }
-    
+	
      /// Deletes a parameterized Entity.
-
+	func deleteEntity(_ req: Request, entity: Entity) throws -> Future<String> {
+		print("entrei no deleteEntity")
+		let entityID = entity.id
+		return Entity.find(entityID!, on: req).flatMap {
+			maybeEntity in
+				guard let entity = maybeEntity else {
+					throw Abort(.notFound)
+				}
+			return entity.delete(on: req).map {
+				print("deleted entity: \(entity.id!)")
+				return "OK"
+			}
+		}
+	}
     
     func delete(_ req: Request) throws -> Future<HTTPStatus> {
         return try req.parameters.next(Entity.self).flatMap { entity in
