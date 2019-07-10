@@ -1,4 +1,5 @@
 import Vapor
+import FluentPostgreSQL
 
 /// Controls basic CRUD operations on `Entity`s.
 final class PersonController: ControllerProtocol {
@@ -39,6 +40,10 @@ final class PersonController: ControllerProtocol {
             rawSQLQuery += " AND " + onFields[i].stringValue + " = " + value + "  "
         }
         print(rawSQLQuery)
+		let persons = req.withPooledConnection(to: .psql) { (conn) -> Future<[Person]> in
+			conn.raw(rawSQLQuery).all(decoding: Person.self)
+		}
+		return persons
     }
     
     func searchOR(_ req: Request, theseValues: Person, onFields: [PartialKeyPath<Person>])  throws -> EventLoopFuture<[Person]>{
@@ -50,6 +55,10 @@ final class PersonController: ControllerProtocol {
         }
         rawSQLQuery += ")"
         print(rawSQLQuery)
+		let persons = req.withPooledConnection(to: .psql) { (conn) -> Future<[Person]> in
+			conn.raw(rawSQLQuery).all(decoding: Person.self)
+		}
+		return persons
     }
     
 }

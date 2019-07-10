@@ -36,15 +36,14 @@ extension Campaign: Migration {
     }
 }
 
-extension PartialKeyPath where Root == Endorsement {
+extension PartialKeyPath where Root == Campaign {
     var stringValue: String {
         switch self {
-        case \Endorsement.id            : return "id"
-        case \Endorsement.fromPerson    : return "fromPerson"
-        case \Endorsement.toPerson      : return "toPerson"
-        case \Endorsement.campaign      : return "campaign"
-        case \Endorsement.description   : return "description"
-        case \Endorsement.value         : return "value"
+        case \Campaign.id			: return "id"
+        case \Campaign.title    	: return "fromPerson"
+        case \Campaign.description  : return "toPerson"
+        case \Campaign.groups      	: return "campaign"
+        case \Campaign.admins   	: return "description"
         default: fatalError("Unexpected key path")
         }
     }

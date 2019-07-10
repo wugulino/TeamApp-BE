@@ -27,10 +27,10 @@ public func routes(_ router: Router) throws {
     router.post("entity", use: entityController.save)
 	
 	// update
-	router.post(Entity.self, at: ["entity","update"]) {
-		req, entity -> Future<Entity> in
-		return try entityController.update(req, entity: entity)
-	}
+	//router.post(Entity.self, at: ["entity","update"]) {
+	//	req, entity -> Future<Entity> in
+	//	return try entityController.update(req, entity: entity)
+	//}
 	
 	// delete
     router.post(Entity.self, at: ["entity","delete"]){
