@@ -40,10 +40,10 @@ extension PartialKeyPath where Root == Campaign {
     var stringValue: String {
         switch self {
         case \Campaign.id			: return "id"
-        case \Campaign.title    	: return "fromPerson"
-        case \Campaign.description  : return "toPerson"
-        case \Campaign.groups      	: return "campaign"
-        case \Campaign.admins   	: return "description"
+        case \Campaign.title    	: return "title"
+        case \Campaign.description  : return "description"
+        case \Campaign.groups      	: return "groups"
+        case \Campaign.admins   	: return "admins"
         default: fatalError("Unexpected key path")
         }
     }

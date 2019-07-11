@@ -37,8 +37,8 @@ extension PartialKeyPath where Root == Group {
     var stringValue: String {
         switch self {
         case \Group.id       : return "id"
-        case \Group.name     : return "group"
-        case \Group.campaign : return "role"
+        case \Group.name     : return "name"
+        case \Group.campaign : return "campaign"
         default: fatalError("Unexpected key path")
         }
     }
