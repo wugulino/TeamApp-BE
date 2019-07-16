@@ -19,6 +19,15 @@ final class Person: Codable {
     var skills          : [Skill.ID]?
     var passwordHash    : String?
     var deleted         : Bool
+	
+	static let formDateFormatter: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.calendar = Calendar(identifier: .iso8601)
+		formatter.locale = Locale(identifier: "en_US_POSIX")
+		formatter.timeZone = TimeZone(secondsFromGMT: 0)
+		formatter.dateFormat = "yyyy-MM-dd"
+		return formatter
+	}()
     
     init(id: UUID, name: String, nickname: String, sex: String, title: String, foto: String, telegramID: String, email: String, dateOfBirth: Date, shortBio: String, pools: [Pool.ID], skills: [Skill.ID], passwordHash: String, deleted: Bool) {
         self.id           = id
@@ -36,6 +45,15 @@ final class Person: Codable {
         self.passwordHash = passwordHash
         self.deleted      = deleted
     }
+	init(from decoder: Decoder)throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		
+		if let start = try? container.decode(String.self, forKey: .dateOfBirth), let date = Event.formDateFormatter.string(from: start) {
+			self.dateOfBirth = date
+		} else {
+			self.dateOfBirth = try container.decode(Date.self, forKey: .dateOfBirth)
+		}
+	}
 }
 
 extension Person: PostgreSQLUUIDModel {

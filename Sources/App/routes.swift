@@ -1,4 +1,5 @@
 import Vapor
+import Fluent
 
 /// Register your application's routes here.
 public func routes(_ router: Router) throws {
@@ -42,10 +43,13 @@ public func routes(_ router: Router) throws {
 //    PERSON
     let personController = PersonController()
     // Find a person given the ID
-    router.post(UUIDParam.self, at: ["person","get"]) {
-        req, param -> EventLoopFuture<Person> in
-            return try personController.find(param, on: req)!
-    }
+	router.post(Person.self, at: ["person","get"]){
+		(req, p) throws -> Future<Person>
+		in
+			return try personController.find(p.id!, on: req)
+	}
+	
+	
     
     // List all the records
     router.get(["person","list"]) { req -> Future<[Person]> in
@@ -67,8 +71,8 @@ public func routes(_ router: Router) throws {
     
     // deletes one record from Person.
     // It only uses the ID field, all the other fields are ignored (even if filled/sent)
-    router.post(Person.self, at:["person","delete"]) { req, person -> String in
-        return try personController.delete(this: person, on: req)
+    router.post(Person.self, at:["person","delete"]) { req, person -> Future<HTTPStatus> in
+        return try personController.delete(this: person, on: req).transform(to: HTTPStatus.ok)
     }
     
     // Searches and returns all Person records that match the filled data.

@@ -3,8 +3,8 @@ import FluentPostgreSQL
 
 /// Controls basic CRUD operations on `Entity`s.
 final class PersonController: ControllerProtocol {
-    func find(_ id: UUID, on req: Request) throws -> EventLoopFuture<Person?> {
-        return Person.find(id, on: req)
+    func find(_ id: UUID, on req: Request) throws -> EventLoopFuture<Person> {
+		return Person.find(id, on: req).unwrap(or: Abort(.notFound))
     }
     
     func list(_ req: Request) throws -> Future<[Person]> {
@@ -12,6 +12,7 @@ final class PersonController: ControllerProtocol {
     }
     
     func insert(_ newItem: Person, on req: Request) throws -> Future<Person> {
+		print("Entered the insert function")
         return newItem.save(on: req)
     }
     
@@ -19,21 +20,12 @@ final class PersonController: ControllerProtocol {
         return newValue.update(on: req)
     }
     
-    func delete(this: Person, on req: Request) throws -> String {
-        let personID = this.id
-        return Person.find(personID!, on: req).flatMap {
-            maybePerson in
-            guard let this = maybePerson else {
-                return "ERROR: Person not found."
-            }
-            return this.delete(on: req).map {
-                print("deleted entity: \(this.id!)")
-                return "OK"
-            }
-        }
-    }
+    func delete(this: Person, on req: Request) throws -> Future<HTTPStatus> {
+        let personID = this.id!
+		return try self.find(personID, on: req).flatMap{actualPerson throws -> Future<HTTPStatus> in actualPerson.delete(on: req).transform(to: HTTPStatus.ok)}
+	}
 
-    func searchAND(_ req: Request, theseValues: Person) throws -> Future<[Person]> {
+    func searchAND(_ req: Request, theseValues: Person) throws -> EventLoopFuture<[Person]> {
         do {
             
             let mirroredObject = Mirror(reflecting: theseValues)
@@ -52,10 +44,10 @@ final class PersonController: ControllerProtocol {
                 conn.raw(rawSQLQuery).all(decoding: Person.self)
             }
             return persons
-        }
+		} 
     }
     
-    func searchOR(_ req: Request, theseValues: Person)  throws -> Future<[Person]>{
+    func searchOR(_ req: Request, theseValues: Person) throws -> EventLoopFuture<[Person]> {
         do {
             let mirroredObject = Mirror(reflecting: theseValues)
             var rawSQLQuery: String = " SELECT * person WHERE deleted = false AND ("
@@ -88,3 +80,15 @@ final class PersonController: ControllerProtocol {
  return Post.query(on: request).filter(\Post.created_at > marchThirteenth).all()
  }
  */
+
+/*
+
+let futureResult = user.save()
+futureResult.do { user in
+print("User was saved")
+}.catch { error in
+print("There was an error saving the user: \(error)")
+}
+
+
+*/
